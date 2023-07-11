@@ -1,0 +1,27 @@
+typedef void (*DR_On_Key_T)         (const DR_MessageDesc_T *dmsg, const void *data, DR_DataLength_T data_len, const DR_Key_List_T *key_list);
+typedef void (*DR_On_Key_Error_T)   (const DR_MessageDesc_T *dmsg, DR_ErrorCodes_T error_code, const DR_Key_List_T *key_list);
+
+
+
+typedef struct DR_Key_List_Tag
+{
+   const void/*DR_RecvRecord_T*/*record_list;
+   size_t                     list_num_elems;
+}
+DR_Key_List_T;
+
+
+
+
+typedef struct DR_MessageDesc_Tag
+{
+   DR_Key_T          key;
+   /* DR_ActionType_T */
+   uint8_t           action_type;
+   /* DR_DataType_T */
+   uint8_t           data_type;
+}DR_MessageDesc_T;
+
+
+
+typedef uint32_t DR_DataLength_T;
