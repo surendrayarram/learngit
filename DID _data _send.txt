@@ -1,0 +1,52 @@
+bool_t DR_Did_Send(
+   const DR_Key_List_T *list,
+   DR_Key_T             key,
+   DR_ActionType_T      action_type,
+   DR_DataType_T        data_type,
+   const void          *data,
+   DR_DataLength_T      data_len)
+{
+   uint8_t data_buff[DR_DID_MAX_MSG_SIZE];
+   uint16_t data_idx = 0;
+   bool_t result = false;
+
+   data_buff[data_idx++] = (uint8_t)(key >> 16);
+   data_buff[data_idx++] = (uint8_t)(key >>  8);
+   data_buff[data_idx++] = (uint8_t)(key >>  0);
+   data_buff[data_idx++] = (uint8_t)action_type;
+   data_buff[data_idx++] = (uint8_t)data_type;
+   data_buff[data_idx++] = DIAG_ROUTER_EV_DATA;
+
+   if(NULL != list)
+   {
+      if (DR_DID_MAX_MSG_SIZE >= data_idx + data_len)
+      {
+         memcpy(&data_buff[data_idx], data, data_len);
+         if (0 == DIDWrapperToDiagDID(data_buff, data_idx + data_len))
+         {
+            result = true;
+         }
+         else
+         {
+            result = false;
+         }
+      }
+   }
+
+   return result;
+}
+
+
+
+#define DR_DID_MAX_MSG_SIZE 70
+
+
+
+
+unsigned char DIDWrapperToDiagDID(const void *data, unsigned short data_size)
+{
+   return Diag_DID_Wrapper_Cbk_Data(data, data_size);
+}
+
+
+
